@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Entry</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #e6e6e6;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .navbar {
+            background-color: #00bcd4;
+            color: white;
+            padding: 15px 0;
+            text-align: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 0 20px;
+            font-size: 18px;
+        }
+        .navbar a:hover {
+            background-color: #00796b;
+            border-radius: 5px;
+        }
+        .main-container {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: flex-start;
+            margin-top: 80px;
+            width: 100%;
+            max-width: 1200px;
+            padding: 20px;
+        }
+        .container {
+            flex: 1;
+            padding: 35px;
+            background-color: #d9d9d9;
+            border-radius: 2px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin: 10px;
+            border: #333 solid 1px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            background-color: #f2f2f2;
+        }
+        button {
+            background-color: #00bcd4;
+            color: white;
+            padding: 15px;
+            width: 100%;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #00796b;
+        }
+        .loading {
+            display: none;
+            position: fixed;
+            z-index: 1001;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background: rgba(255, 255, 255, 0.8);
+            justify-content: center;
+            align-items: center;
+        }
+        .loading::after {
+            content: '';
+            width: 50px;
+            height: 50px;
+            border: 5px solid #00bcd4;
+            border-top: 5px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .alert {
+            display: none;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+        }
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .data-list {
+            flex: 1;
+            padding: 20px;
+            background-color: #d9d9d9;
+            border-radius: 2px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin: 10px;
+            overflow-y: auto;
+            max-height: 80vh;
+            border: #333 solid 1px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid gray;
+        }
+        th {
+            background-color: #00bcd4;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="loading"></div>
+    <div class="navbar">
+        <a href="/homepage">Home</a>
+        <a href="/smart_dashboard" class="special">Smart Dashboard</a>
+        <a href="#">Detect Medicine</a>
+        <a href='/sales_records'>Sales Records</a>
+        <a href="#">Your Profile</a>
+    </div>
+    <div class="main-container">
+        <div class="container">
+            <h2>Stock Entry</h2>
+            <div class="form-group">
+                <label for="product_name">Product Name</label>
+                <input list="product_names" id="product_name" name="product_name" required>
+                <datalist id="product_names">
+                    <!-- Existing product names will be inserted here by Flask -->
+                </datalist>
+            </div>
+            <div class="form-group">
+                <label for="city">City (default)</label>
+                <input type="text" id="city" name="city" value="Chennai">
+            </div>
+            <div class="form-group">
+                <label for="quantity">Quantity</label>
+                <input type="number" id="quantity" name="quantity" required>
+            </div>
+            <div class="form-group">
+                <label for="total_price">Price Per Item (PPP)</label>
+                <input type="number" step="0.01" id="total_price" name="total_price" required>
+            </div>
+            <div class="form-group">
+                <label for="expiry_date">Expiry Date</label>
+                <input type="date" id="expiry_date" name="expiry_date" required>
+            </div>
+            <button onclick="submitStockEntry()">Submit</button>
+            <div class="alert alert-success" id="success-alert">Stock entry successful!</div>
+            <div class="alert alert-danger" id="error-alert">Failed to add stock entry.</div>
+        </div>
+        <div class="data-list">
+            <h2>Stock Records</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Product Name</th>
+                        <th>City</th>
+                        <th>Quantity</th>
+                        <th>Total Price</th>
+                        <th>Expiry Date</th>
+                        <th>Last Modified</th>
+                    </tr>
+                </thead>
+                <tbody id="stock-records">
+                    <!-- Stock records will be inserted here by Flask -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+         document.addEventListener('DOMContentLoaded', function() {
+            fetch('/get_product_names_stock')
+                .then(response => response.json())
+                .then(data => {
+                    const datalist = document.getElementById('product_names');
+                    data.forEach(name => {
+                        const option = document.createElement('option');
+                        option.value = name;
+                        datalist.appendChild(option);
+                    });
+                })
+                .catch(error => console.error('Error fetching product names:', error));
+        });
+
+        function submitStockEntry() {
+            document.querySelector('.loading').style.display = 'flex';
+            const product_name = document.getElementById('product_name').value;
+            const city = document.getElementById('city').value;
+            const quantity = document.getElementById('quantity').value;
+            const total_price = document.getElementById('total_price').value;
+            const expiry_date = document.getElementById('expiry_date').value;
+
+            fetch('/add_stock', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    product_name,
+                    city,
+                    quantity,
+                    total_price,
+                    expiry_date
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.querySelector('.loading').style.display = 'none';
+                if (data.success) {
+                    document.getElementById('success-alert').style.display = 'block';
+                    document.getElementById('error-alert').style.display = 'none';
+                    updateStockRecords(data.records);
+                } else {
+                    document.getElementById('error-alert').style.display = 'block';
+                    document.getElementById('success-alert').style.display = 'none';
+                }
+            })
+            .catch(error => {
+                document.querySelector('.loading').style.display = 'none';
+                document.getElementById('error-alert').style.display = 'block';
+                document.getElementById('success-alert').style.display = 'none';
+            });
+        }
+
+        function updateStockRecords(records) {
+            const stockRecordsTable = document.getElementById('stock-records');
+            stockRecordsTable.innerHTML = '';
+            records.forEach(record => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${record.product_name}</td>
+                    <td>${record.city}</td>
+                    <td>${record.quantity}</td>
+                    <td>${record.total_price}</td>
+                    <td>${record.expiry_date}</td>
+                    <td>${record.last_modified}</td>
+                `;
+                stockRecordsTable.appendChild(row);
+            });
+        }
+    </script>
+</body>
+</html>

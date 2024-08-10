@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Sale Entry</title>
+    <style>
+        /* (Existing styles remain the same) */
+        /* Add styles for the remove button */
+        body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #e6e6e6;
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: auto;
+}
+
+.navbar {
+    background-color: #00bcd4;
+    color: white;
+    padding: 10px 0;
+    text-align: center;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+}
+
+.navbar a {
+    color: white;
+    text-decoration: none;
+    padding: 0 15px;
+    font-size: 16px;
+}
+
+.navbar a:hover {
+    background-color: #00796b;
+    border-radius: 5px;
+}
+
+.main-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    margin-top: 350px;
+    width: 100%;
+    max-width: 1000px;
+    padding: 15px;
+}
+
+.container {
+    flex: 1;
+    padding: 20px;
+    background-color: #d9d9d9;
+    border-radius: 2px;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+    margin: 10px;
+    border: #333 solid 1px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+input, select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    background-color: #f2f2f2;
+}
+
+button {
+    background-color: #00bcd4;
+    color: white;
+    padding: 10px;
+    width: 100%;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #00796b;
+}
+
+.loading {
+    display: none;
+    position: fixed;
+    z-index: 1001;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: rgba(255, 255, 255, 0.8);
+    justify-content: center;
+    align-items: center;
+}
+
+.loading::after {
+    content: '';
+    width: 40px;
+    height: 40px;
+    border: 4px solid #00bcd4;
+    border-top: 4px solid transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.alert {
+    display: none;
+    padding: 8px;
+    margin-top: 10px;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.data-list {
+    flex: 1;
+    padding: 15px;
+    background-color: #d9d9d9;
+    border-radius: 2px;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+    margin: 10px;
+    overflow-y: auto;
+    max-height: 70vh;
+    border: #333 solid 1px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+th, td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid gray;
+    font-size: 14px;
+}
+
+th {
+    background-color: #00bcd4;
+    color: white;
+}
+
+.remove-btn {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 4px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.remove-btn:hover {
+    background-color: #d32f2f;
+}
+
+    </style>
+</head>
+<body>
+    <div class="loading"></div>
+    <div class="navbar">
+        <a href="/homepage">Home</a>
+        <a href="/smart_dashboard" class="special">Smart Dashboard</a>
+        <a href="#">Detect Medicine</a>
+        <a href='/sales_records'>Sales Records</a>
+        <a href="#">Your Profile</a>
+    </div>
+    <div class="main-container">
+        <div class="container">
+            <h2>Add Sale Entry</h2>
+            <div class="form-group">
+                <label for="customer_name">Customer Name *</label>
+                <input type="text" id="customer_name" name="customer_name" required>
+            </div>
+            <div class="form-group">
+                <label for="customer_id">Phone Number *</label>
+                <input type="text" id="customer_id" name="customer_id" required><br><br>
+                <button onclick="sendOtp()" style="width: 20%;background-color: #00796b;">Send OTP</button>
+                <p style="text-align: left;display: none;" id="otp_status"></p>
+            </div>
+        
+            <div class="form-group">
+                <label for="otp">Enter OTP</label>
+                <input type="text" id="otp" name="otp"><br><br>
+                <button onclick="verifyOtp()" style="width: 20%;background-color: #860505;">Verify OTP</button>
+                <p style="text-align: left;display: none;" id="otp_r_status"></p>
+            </div>
+            <div style="display: flex;align-items: center;">
+                <h3>Notify :  </h3>
+                <select id="notify-option" name="notify-option" style="width: 10%;">
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="product_name">Product Name *</label>
+                <input list="product_names" id="product_name" name="product_name" required>
+                <datalist id="product_names">
+                    <!-- Existing product names will be inserted here by Flask -->
+                </datalist>
+            </div>
+            <div class="form-group">
+                <label for="quantity">Quantity *</label>
+                <input type="number" id="quantity" name="quantity" required>
+            </div>
+            <button onclick="addToCart()">Add to Cart</button>
+            <h3>Cart</h3>
+            <div class="data-list">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Product Name</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                            <th>Total</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cart-items">
+                        <!-- Cart items will be inserted here by JavaScript -->
+                    </tbody>
+                </table>
+                <br>
+                <div>Total Amount: $<span id="total-amount">0.00</span></div>
+            </div>
+            <br>
+            <button onclick="submitSaleEntry()" style="background-color: #155724;">Proceed to Bill</button>
+            <div class="alert alert-success" id="success-alert">Sale entry successful!</div>
+            <div class="alert alert-danger" id="error-alert">Failed to add sale entry.</div>
+        </div>
+    </div>
+    <script>
+        let cart = [];
+        let totalAmount = 0;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('/get_product_names')
+                .then(response => response.json())
+                .then(data => {
+                    const datalist = document.getElementById('product_names');
+                    data.forEach(name => {
+                        const option = document.createElement('option');
+                        option.value = name;
+                        datalist.appendChild(option);
+                    });
+                })
+                .catch(error => console.error('Error fetching product names:', error));
+        });
+
+        function addToCart() {
+            const productName = document.getElementById('product_name').value;
+            const quantity = parseInt(document.getElementById('quantity').value, 10);
+
+            if (!productName || isNaN(quantity) || quantity <= 0) {
+                alert('Please enter valid product name and quantity.');
+                return;
+            }
+
+            fetch(`/get_product_price?product_name=${encodeURIComponent(productName)}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.price) {
+                        const price = data.price;
+                        const total = price * quantity;
+                        totalAmount += total;
+
+                        cart.push({ productName, quantity, price, total });
+                        updateCartTable();
+                    } else {
+                        alert('Product not found.');
+                    }
+                })
+                .catch(error => console.error('Error fetching product price:', error));
+        }
+
+        function updateCartTable() {
+            const cartItemsTable = document.getElementById('cart-items');
+            cartItemsTable.innerHTML = '';
+            cart.forEach((item, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item.productName}</td>
+                    <td>${item.quantity}</td>
+                    <td>$${item.price.toFixed(2)}</td>
+                    <td>$${item.total.toFixed(2)}</td>
+                    <td><button class="remove-btn" onclick="removeFromCart(${index})">Remove</button></td>
+                `;
+                cartItemsTable.appendChild(row);
+            });
+            document.getElementById('total-amount').textContent = totalAmount.toFixed(2);
+        }
+
+        function removeFromCart(index) {
+            totalAmount -= cart[index].total;
+            cart.splice(index, 1);
+            updateCartTable();
+        }
+
+        function submitSaleEntry() {
+            const customerName = document.getElementById('customer_name').value;
+            const customerId = document.getElementById('customer_id').value;
+
+            if (!customerName || !customerId || cart.length === 0) {
+                alert('Please fill in all fields and add at least one product to the cart.');
+                return;
+            }
+
+            const saleData = {
+                customer_name: customerName,
+                customer_id: customerId,
+                items: cart,
+                totalAmount,
+                date: new Date().toISOString().split('T')[0], // YYYY-MM-DD format
+                city: 'Chennai'
+            };
+
+            document.querySelector('.loading').style.display = 'flex';
+
+            fetch('/add_sale', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(saleData)
+            })
+            .then(response => {
+                document.querySelector('.loading').style.display = 'none';
+                if (response.ok) {
+                    document.getElementById('success-alert').style.display = 'block';
+                    setTimeout(() => document.getElementById('success-alert').style.display = 'none', 3000);
+                    cart = [];
+                    totalAmount = 0;
+                    updateCartTable();
+                } else {
+                    return response.json().then(data => {
+                        document.getElementById('error-alert').style.display = 'block';
+                        document.getElementById('error-alert').innerHTML = data.message || 'An error occurred';
+                        setTimeout(() => document.getElementById('error-alert').style.display = 'none', 3000);
+                    });
+                }
+            })
+            .catch(error => {
+                document.querySelector('.loading').style.display = 'none';
+                console.error('Error submitting sale entry:', error);
+                document.getElementById('error-alert').style.display = 'block';
+                document.getElementById('error-alert').innerHTML = "Network errror occured!";
+                setTimeout(() => document.getElementById('error-alert').style.display = 'none', 3000);
+            });
+        }
+        function sendOtp() {
+            var customer_id = document.getElementById('customer_id').value;
+            var formData = new FormData();
+            formData.append('customer_id', customer_id);
+
+            fetch('/send_otp', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('otp_status').style.display = "block";
+                if(data.status == "success"){
+                    document.getElementById('otp_status').style.color = "green";}
+                else {
+                    document.getElementById('otp_status').style.color = "red";
+                }
+                document.getElementById('otp_status').innerHTML = data.message;
+                
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('otp_status').style.display = "block";
+                document.getElementById('otp_status').style.color = "red";
+                document.getElementById('otp_status').innerHTML = "Something went wrong!";
+                
+            });
+        }
+
+        function verifyOtp() {
+            var customer_id = document.getElementById('customer_id').value;
+            var otp = document.getElementById('otp').value;
+            var formData = new FormData();
+            formData.append('customer_id', customer_id);
+            formData.append('otp', otp);
+
+            fetch('/verify_otp', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('otp_r_status').style.display = "block";
+                if(data.status == "success"){
+                    document.getElementById('otp_r_status').style.color = "green";}
+                else {
+                    document.getElementById('otp_r_status').style.color = "red";
+                }
+                document.getElementById('otp_r_status').innerHTML = data.message;
+                
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('otp_r_status').style.display = "block";
+                document.getElementById('otp_r_status').style.color = "red";
+                document.getElementById('otp_r_status').innerHTML = "Something went wrong!";
+                
+            });
+        }
+    </script>
+</body>
+</html>
