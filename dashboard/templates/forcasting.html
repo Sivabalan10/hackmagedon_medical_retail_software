@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Forecasting</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            overflow: auto;
+        }
+        .navbar {
+            background-color: #00bcd4;
+            color: white;
+            padding: 15px;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+        }
+        .back-button {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background-color: #00796b;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        .back-button:hover {
+            background-color: #004d40;
+        }
+        .container {
+            margin-top: 80px;
+            width: 100%;
+            max-width: 1200px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .loading {
+            display: none;
+            position: fixed;
+            z-index: 1001;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background: rgba(255, 255, 255, 0.8);
+            justify-content: center;
+            align-items: center;
+        }
+        .loading::after {
+            content: '';
+            width: 50px;
+            height: 50px;
+            border: 5px solid #00bcd4;
+            border-top: 5px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        p {
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .chatbox {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+        }
+        .chatbox textarea {
+            width: 100%;
+            max-width: 600px;
+            height: 100px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            resize: none;
+        }
+        .chatbox button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .chatbox button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="loading"></div>
+    <div class="navbar">
+        <a onclick="window.history.back()" style="cursor: pointer;padding: 30px;">Back</a>
+        <a href="http://127.0.0.1:5000/homepage" style="cursor: pointer;padding: 30px;">Home</a>
+    </div>
+    
+    <div class="container">
+        <h2>AI Forecasting</h2>
+        <h2>Select a Product</h2>
+        <form action="/analyze_product_selected" method="POST">
+            <label for="product">Choose a product:</label>
+            <select id="product" name="product">
+                <option value="Warfarin">Warfarin</option>
+                <option value="Methotrexate">Methotrexate</option>
+                <option value="Methadone">Methadone</option>
+                <option value="Amoxicillin">Amoxicillin</option>
+                <option value="Vitamins">Vitamins</option>
+                <option value="Probiotics">Probiotics</option>
+                <option value="Gabapentin">Gabapentin</option>
+                <option value="Quetiapine">Quetiapine</option>
+                <option value="Fluoxetine">Fluoxetine</option>
+                <option value="Diazepam">Diazepam</option>
+                <option value="Omeprazole">Omeprazole</option>
+                <option value="Clopidogrel">Clopidogrel</option>
+                <option value="Buprenorphine">Buprenorphine</option>
+                <option value="Codeine">Codeine</option>
+                <option value="Aspirin">Aspirin</option>
+                <option value="Oxycodone">Oxycodone</option>
+                <option value="Azithromycin">Azithromycin</option>
+                <option value="Clonazepam">Clonazepam</option>
+                <option value="Diphenhydramine">Diphenhydramine</option>
+                <option value="Duloxetine">Duloxetine</option>
+                <option value="Ezetimibe">Ezetimibe</option>
+                <option value="Furosemide">Furosemide</option>
+                <option value="Losartan">Losartan</option>
+                <option value="Metformin">Metformin</option>
+                <option value="Paracetamol">Paracetamol</option>
+                <option value="Antacids">Antacids</option>
+                <option value="Methocarbamol">Methocarbamol</option>
+                <option value="Bupropion">Bupropion</option>
+                <option value="Simvastatin">Simvastatin</option>
+                <option value="Glibenclamide">Glibenclamide</option>
+                <option value="Ranitidine">Ranitidine</option>
+                <option value="Risperidone">Risperidone</option>
+                <option value="Cetirizine">Cetirizine</option>
+                <option value="Carisoprodol">Carisoprodol</option>
+                <option value="Nifedipine">Nifedipine</option>
+                <option value="Propylthiouracil">Propylthiouracil</option>
+                <option value="Topiramate">Topiramate</option>
+                <option value="Metoprolol">Metoprolol</option>
+                <option value="Sildenafil">Sildenafil</option>
+                <option value="Prednisolone">Prednisolone</option>
+                <option value="Clarithromycin">Clarithromycin</option>
+                <option value="Lorazepam">Lorazepam</option>
+                <option value="Sodium Valproate">Sodium Valproate</option>
+                <option value="Acetaminophen">Acetaminophen</option>
+                <option value="Acetylsalicylic Acid">Acetylsalicylic Acid</option>
+                <option value="Antihistamines">Antihistamines</option>
+                <option value="Levothyroxine">Levothyroxine</option>
+                <option value="Cough Syrups">Cough Syrups</option>
+                <option value="Pregabalin">Pregabalin</option>
+                <option value="Hydrocodone">Hydrocodone</option>
+                <option value="Venlafaxine">Venlafaxine</option>
+                <option value="Paroxetine">Paroxetine</option>
+                <option value="Hydrochlorothiazide">Hydrochlorothiazide</option>
+                <option value="Alprazolam">Alprazolam</option>
+                <option value="Tamsulosin">Tamsulosin</option>
+                <option value="Doxycycline">Doxycycline</option>
+                <option value="Cyclobenzaprine">Cyclobenzaprine</option>
+                <option value="Olanzapine">Olanzapine</option>
+                <option value="Ibuprofen">Ibuprofen</option>
+                <option value="Mirtazapine">Mirtazapine</option>
+                <option value="Sertraline">Sertraline</option>
+                <option value="Loratadine">Loratadine</option>
+            </select>
+        <button type="submit">Analyze Sales</button>
+        </form>
+        <!-- Smart dashboard content goes here -->
+        <div>{{ future_scope | safe }}</div><hr>
+        <div>{{ seasonal_scope | safe }}</div><hr>
+        <div id="aichatbot"></div>
+
+    </div>
+    <script>
+        window.addEventListener('load', () => {
+            document.querySelector('.loading').style.display = 'none';
+        });
+        !function(w, d, s, ...args){
+            var div = d.createElement('div');
+            div.id = 'aichatbot';
+            d.body.appendChild(div);
+            w.chatbotConfig = args;
+            var f = d.getElementsByTagName(s)[0],
+            j = d.createElement(s);
+            j.defer = true;
+            j.type = 'module';
+            j.src = 'https://aichatbot.sendbird.com/index.js';
+            f.parentNode.insertBefore(j, f);
+        }(window, document, 'script', '7221DD81-C969-4792-876C-924A3F12D38D', 'onboarding_bot', {
+            apiHost: 'https://api-cf-ap-8.sendbird.com',
+        });
+
+        // Function to send a message to the chatbot
+        function sendMessage() {
+            const userInput = document.getElementById('userInput').value;
+            if (userInput.trim() === '') {
+                alert('Please enter a message.');
+                return;
+            }
+            // Simulate sending message to the chatbot
+            console.log('Sending message to chatbot:', userInput);
+            // Clear the textarea after sending
+            document.getElementById('userInput').value = '';
+        }
+    </script>
+</body>
+</html>

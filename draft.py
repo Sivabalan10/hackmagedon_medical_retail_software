@@ -1,0 +1,3 @@
+pro = []
+
+print(len(pro))
