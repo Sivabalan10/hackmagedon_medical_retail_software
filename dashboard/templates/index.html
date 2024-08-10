@@ -111,9 +111,9 @@
             {{ table|safe }}
             {% endfor %}
         </div>
-        <div>{{ plot_html | safe }}</div><hr>
+        <div id = "two">{{ plot_html | safe }}</div><hr>
 
-        <div>{{ season_html | safe }}</div>
+        <div id = "three">{{ season_html | safe }}</div>
         <h2>Current season: {{season_data}}</h2><hr>
 
         <h2>Select a Product</h2>
@@ -185,7 +185,7 @@
             </select>
         <button type="submit">Analyze Sales</button>
         </form>
-        <div>{{ dropdown_html | safe }}</div>
+        <div id = "four">{{ dropdown_html | safe }}</div><br><br><br>
     </div>
     <script>
         window.addEventListener('load', () => {
