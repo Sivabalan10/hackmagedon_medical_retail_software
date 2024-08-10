@@ -3,19 +3,10 @@ import sqlite3
 from datetime import datetime
 import random
 import string
-from twilio.rest import Client
+
 
 app = Flask(__name__)
 
-# twilio instance customer
-account_sid = 'AC275ec82d99b202d0d9d56159929f46f6'
-auth_token = '9750ec9df172209f6e3fa73e979facb7'
-client = Client(account_sid, auth_token)
-
-# twilio instance retailer
-account_sid2 = 'AC8d830c566c95b95fcc1ff4a3a0a19c90'
-auth_token2 = 'e06343a35cd19c68cee648bbae95885f'
-client2 = Client(account_sid2, auth_token2)
 
 USERNAME = "admin"
 PASSWORD = "password"
