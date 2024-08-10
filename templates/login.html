@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .container {
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        input[type="email"], input[type="password"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #00bcd4;
+            color: white;
+            padding: 15px 30px;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #00796b;
+        }
+        .loading {
+            display: none;
+            position: fixed;
+            z-index: 1001;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background: rgba(255, 255, 255, 0.8);
+            justify-content: center;
+            align-items: center;
+        }
+        .loading::after {
+            content: '';
+            width: 50px;
+            height: 50px;
+            border: 5px solid #00bcd4;
+            border-top: 5px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="loading"></div>
+    <div class="container">
+        <form id="loginForm">
+            <h2>Login</h2>
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required>
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required>
+            <button type="button" onclick="handleLogin()">Login</button>
+            <p id="error-message" class="error"></p>
+        </form>
+    </div>
+    <script>
+        async function handleLogin() {
+            const loading = document.querySelector('.loading');
+            const errorMessage = document.getElementById('error-message');
+            const form = document.getElementById('loginForm');
+            const formData = new FormData(form);
+            const data = {
+                email: formData.get('email'),
+                password: formData.get('password')
+            };
+
+            loading.style.display = 'flex'; // Show loading animation
+
+            try {
+                const response = await fetch('/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    window.location.href = result.redirect;
+                } else {
+                    errorMessage.textContent = result.message;
+                }
+            } catch (error) {
+                errorMessage.textContent = 'An error occurred. Please try again.';
+            } finally {
+                loading.style.display = 'none'; // Hide loading animation
+            }
+        }
+    </script>
+</body>
+</html>

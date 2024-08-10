@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homepage</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #e6e6e6;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        .navbar {
+            background-color: #00bcd4;
+            color: white;
+            padding: 15px 0;
+            text-align: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 0 20px;
+            font-size: 18px;
+        }
+
+        .navbar a.special {
+            background-color: #00796b;
+            padding: 10px 20px;
+            border-radius: 5px;
+        }
+
+        .navbar a:hover {
+            background-color: #00796b;
+            border-radius: 5px;
+        }
+
+        .main-container {
+            display: flex;
+            margin-top: 80px;
+            padding: 20px;
+            flex-grow: 1;
+            overflow-y: auto;
+            box-sizing: border-box;
+        }
+
+        .button-container {
+            width: 300px;
+            max-width: 300px;
+            margin-right: 20px;
+        }
+
+        button {
+            background-color: #00bcd4;
+            color: white;
+            padding: 15px 30px;
+            margin: 10px 0;
+            width: 100%;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #00796b;
+        }
+
+        .loading {
+            display: none;
+            position: fixed;
+            z-index: 1001;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background: rgba(255, 255, 255, 0.8);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .loading::after {
+            content: '';
+            width: 50px;
+            height: 50px;
+            border: 5px solid #00bcd4;
+            border-top: 5px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .data-container {
+            flex-grow: 1;
+            background-color: #d9d9d9;
+            border-radius: 2px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            
+        }
+
+        th,
+        td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid gray;
+        }
+
+        th {
+            background-color: #00bcd4;
+            color: white;
+        }
+
+        tr.low-quantity {
+            background-color: #ff6666;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="loading"></div>
+    <div class="navbar">
+        <a href="#">Home</a>
+        <a href="http://127.0.0.1:5003" class="special">Smart Dashboard</a>
+        <a href="https://siva.viyugha.tech/">Detect Medicine</a>
+        <a href="/sales_records">Sales Records</a>
+        <a href="#">Your Profile</a>
+    </div>
+    <div class="main-container">
+        <div class="button-container"><br><br><br><br>
+            <button onclick="navigateTo('/add_stock')"><b>+</b> Add Stock Entry</button>
+            <button onclick="navigateTo('/add_sale')"><b>+</b> Add Sale Entry</button>
+            <button onclick="window.location.href = `http://127.0.0.1:5003`">Smart Dashboard</button>
+            <button onclick="window.location.href = `http://127.0.0.1:5003/forecasting`">Forecasting</button>
+            <button>Empty</button>
+        </div>
+        <div class="data-container">
+            <h2>Stock Records</h2>
+            <table id="stock-records-table">
+                <thead>
+                    <tr>
+                        <th>Last Modified</th>
+                        <th>Product Name</th>
+                        <th>City</th>
+                        <th>Quantity</th>
+                        <th>Total Price</th>
+                        <th>Expiry Date</th>
+                        <th>Weightage</th>
+                    </tr>
+                </thead>
+                <tbody id="stock-records-body">
+                    <!-- Stock records will be inserted here by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        function navigateTo(url) {
+            document.querySelector('.loading').style.display = 'flex';
+            setTimeout(() => {
+                window.location.href = url;
+                document.querySelector('.loading').style.display = 'none';
+            }, 500);
+        }
+
+        function fetchStockRecords() {
+            fetch('/get_stock_records_analytics')
+                .then(response => response.json())
+                .then(data => {
+                    const tbody = document.getElementById('stock-records-body');
+                    tbody.innerHTML = '';
+
+                    // Sort data based on threshold in descending order
+                    data.sort((a, b) => b.threshold - a.threshold);
+
+                    data.forEach(record => {
+                        const row = document.createElement('tr');
+
+                        // Check if quantity is less than 15 and apply red background if true
+                        if (record.quantity < 15) {
+                            row.style.backgroundColor = '#ff4d4d';
+                        }
+
+                        // Populate the row with record data
+                        row.innerHTML = `
+                            <td>${record.last_modified}</td>
+                            <td>${record.product_name}</td>
+                            <td>${record.city}</td>
+                            <td>${record.quantity}</td>
+                            <td>${record.total_price.toFixed(2)}</td>
+                            <td>${record.expiry_date}</td>
+                            <td>${record.threshold.toFixed(2)}</td>
+                        `;
+
+                        // Append the row to the table body
+                        tbody.appendChild(row);
+                    });
+                })
+                .catch(error => console.error('Error fetching stock records:', error));
+        }
+
+        document.addEventListener('DOMContentLoaded', fetchStockRecords);
+
+
+    </script>
+</body>
+
+</html>
