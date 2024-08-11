@@ -34,13 +34,14 @@ This project is a comprehensive application tailored for medical retailers in Ta
 ## Installation
 
 ### Prerequisites
+# Check requirements.txt and download all the files
 - Python 3.8+
 - Flask
 - SQL
 - Pandas
 - Plotly
 - sci-kit-learn
-- Twilio (for OTP verification)
+- Twilio (for OTP verification) (For prototype only)
 
 ### Steps
 1. **Clone the Repository:**
@@ -87,3 +88,5 @@ Navigate back to the main directory.
 - Execute the smart_dashboard.py file.
 
 - python smart_dashboard.py
+
+## Developed during hackmagedon ~ Tech Fury
