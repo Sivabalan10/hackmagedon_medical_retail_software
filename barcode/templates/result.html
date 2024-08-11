@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verification Result</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f9fc;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            max-width: 1200px;
+            margin: auto;
+            overflow-x: auto;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+        .error-message {
+            color: #d9534f;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            table-layout: auto; /* Auto-width for columns */
+        }
+        th, td {
+            border: 1px solid #e0e0e0;
+            padding: 8px;
+            text-align: left;
+            font-size: 14px;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+            font-size: 16px;
+            text-transform: uppercase;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        /* Responsive design */
+        @media (max-width: 768px) {
+            table, thead, tbody, th, td, tr {
+                display: block;
+            }
+            thead tr {
+                position: absolute;
+                top: -9999px;
+                left: -9999px;
+            }
+            tr {
+                border: 1px solid #ccc;
+                margin-bottom: 5px;
+                display: flex;
+                flex-direction: column;
+            }
+            td {
+                border: none;
+                position: relative;
+                padding-left: 50%;
+                white-space: nowrap;
+            }
+            td::before {
+                content: attr(data-label);
+                position: absolute;
+                left: 0;
+                width: 50%;
+                padding-left: 10px;
+                font-weight: bold;
+                white-space: nowrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Medicine Verification Result</h1>
+        {% if has_results %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Product ID</th>
+                        <th>Product NDC</th>
+                        <th>Package Code</th>
+                        <th>Package Description</th>
+                        <th>Start Marketing Date (x)</th>
+                        <th>End Marketing Date (x)</th>
+                        <th>NDC Exclude Flag (x)</th>
+                        <th>Sample Package</th>
+                        <th>Product ID (y)</th>
+                        <th>Product Type Name</th>
+                        <th>Proprietary Name</th>
+                        <th>Proprietary Name Suffix</th>
+                        <th>Non-Proprietary Name</th>
+                        <th>Dosage Form Name</th>
+                        <th>Route Name</th>
+                        <th>Start Marketing Date (y)</th>
+                        <th>End Marketing Date (y)</th>
+                        <th>Marketing Category Name</th>
+                        <th>Application Number</th>
+                        <th>Labeler Name</th>
+                        <th>Substance Name</th>
+                        <th>Active Numerator Strength</th>
+                        <th>Active Ingredient Unit</th>
+                        <th>Pharm Classes</th>
+                        <th>DEA Schedule</th>
+                        <th>NDC Exclude Flag (y)</th>
+                        <th>Listing Record Certified Through</th>
+                    </tr>
+                </thead>
+                <tbody id="result-body">
+                    {% for index, row in result.iterrows() %}
+                    <tr>
+                        <td data-label="Product ID">{{ row['PRODUCTID_x'] }}</td>
+                        <td data-label="Product NDC">{{ row['PRODUCTNDC'] }}</td>
+                        <td data-label="Package Code">{{ row['NDCPACKAGECODE'] }}</td>
+                        <td data-label="Package Description">{{ row['PACKAGEDESCRIPTION'] }}</td>
+                        <td data-label="Start Marketing Date (x)">{{ row['STARTMARKETINGDATE_x'] }}</td>
+                        <td data-label="End Marketing Date (x)">{{ row['ENDMARKETINGDATE_x'] }}</td>
+                        <td data-label="NDC Exclude Flag (x)">{{ row['NDC_EXCLUDE_FLAG_x'] }}</td>
+                        <td data-label="Sample Package">{{ row['SAMPLE_PACKAGE'] }}</td>
+                        <td data-label="Product ID (y)">{{ row['PRODUCTID_y'] }}</td>
+                        <td data-label="Product Type Name">{{ row['PRODUCTTYPENAME'] }}</td>
+                        <td data-label="Proprietary Name">{{ row['PROPRIETARYNAME'] }}</td>
+                        <td data-label="Proprietary Name Suffix">{{ row['PROPRIETARYNAMESUFFIX'] }}</td>
+                        <td data-label="Non-Proprietary Name">{{ row['NONPROPRIETARYNAME'] }}</td>
+                        <td data-label="Dosage Form Name">{{ row['DOSAGEFORMNAME'] }}</td>
+                        <td data-label="Route Name">{{ row['ROUTENAME'] }}</td>
+                        <td data-label="Start Marketing Date (y)">{{ row['STARTMARKETINGDATE_y'] }}</td>
+                        <td data-label="End Marketing Date (y)">{{ row['ENDMARKETINGDATE_y'] }}</td>
+                        <td data-label="Marketing Category Name">{{ row['MARKETINGCATEGORYNAME'] }}</td>
+                        <td data-label="Application Number">{{ row['APPLICATIONNUMBER'] }}</td>
+                        <td data-label="Labeler Name">{{ row['LABELERNAME'] }}</td>
+                        <td data-label="Substance Name">{{ row['SUBSTANCENAME'] }}</td>
+                        <td data-label="Active Numerator Strength">{{ row['ACTIVE_NUMERATOR_STRENGTH'] }}</td>
+                        <td data-label="Active Ingredient Unit">{{ row['ACTIVE_INGRED_UNIT'] }}</td>
+                        <td data-label="Pharm Classes">{{ row['PHARM_CLASSES'] }}</td>
+                        <td data-label="DEA Schedule">{{ row['DEASCHEDULE'] }}</td>
+                        <td data-label="NDC Exclude Flag (y)">{{ row['NDC_EXCLUDE_FLAG_y'] }}</td>
+                        <td data-label="Listing Record Certified Through">{{ row['LISTING_RECORD_CERTIFIED_THROUGH'] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p class="error-message">The Medicine is not authentic or no record found.</p>
+        {% endif %}
+    </div>
+    <a onclick="window.history.back()" style="cursor: pointer;padding: 30px;">Back</a>
+    <a href="http://127.0.0.1:5000/homepage" style="cursor: pointer;padding: 30px;">Home</a>
+</body>
+</html>

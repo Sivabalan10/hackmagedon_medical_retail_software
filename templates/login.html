@@ -3,18 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Outfit:wght@100..900&display=swap" rel="stylesheet">
+    <title>Retailer Login</title>
     <style>
         body {
             margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f0f8ff;
-            color: #333;
+            font-family: "Outfit", sans-serif;
+            background: linear-gradient(135deg, #ff7e5f, #feb47b);
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            overflow: hidden;
+            color: #333;
         }
         .container {
             width: 100%;
@@ -22,29 +24,43 @@
             padding: 20px;
             background-color: #fff;
             border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
             text-align: center;
+            position: relative;
+        }
+        h2 {
+            margin: 0;
+            color: #333;
+            font-size: 24px;
+            font-weight: 600;
         }
         input[type="email"], input[type="password"] {
             width: calc(100% - 22px);
             padding: 10px;
             margin: 10px 0;
-            border: 1px solid #ccc;
+            border: 1px solid #ddd;
             border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        input[type="email"]:focus, input[type="password"]:focus {
+            border-color: #ff7e5f;
+            outline: none;
         }
         button {
-            background-color: #00bcd4;
+            background-color: #ff7e5f;
             color: white;
             padding: 15px 30px;
-            margin: 10px;
+            margin: 10px 0;
             border: none;
             border-radius: 5px;
             cursor: pointer;
             font-size: 18px;
-            transition: background-color 0.3s;
+            transition: background-color 0.3s, transform 0.3s;
         }
         button:hover {
-            background-color: #00796b;
+            background-color: #feb47b;
+            transform: scale(1.05);
         }
         .loading {
             display: none;
@@ -62,7 +78,7 @@
             content: '';
             width: 50px;
             height: 50px;
-            border: 5px solid #00bcd4;
+            border: 5px solid #ff7e5f;
             border-top: 5px solid transparent;
             border-radius: 50%;
             animation: spin 1s linear infinite;
@@ -72,15 +88,28 @@
             100% { transform: rotate(360deg); }
         }
         .error {
-            color: red;
+            color: #ff7e5f;
+            margin-top: 10px;
+        }
+        .container::before {
+            content: "";
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            width: calc(100% + 20px);
+            height: calc(100% + 20px);
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            z-index: -1;
+            filter: blur(10px);
         }
     </style>
 </head>
 <body>
     <div class="loading"></div>
     <div class="container">
+        <h1>Retailer Login</h1>
         <form id="loginForm">
-            <h2>Login</h2>
             <label for="email">Email</label>
             <input type="email" id="email" name="email" required>
             <label for="password">Password</label>

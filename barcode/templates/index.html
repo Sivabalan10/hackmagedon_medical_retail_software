@@ -4,31 +4,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
     <title>Upload Barcode</title>
     <style>
         body {
-            font-family: "Bebas Neue", sans-serif;
-            background-color: #f4f4f9;
+            font-family: "Nunito", sans-serif;
+            background: linear-gradient(135deg, #f9f9f9, #e0f7fa);
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
+            overflow: hidden;
         }
         .container {
             background: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            padding: 30px;
             max-width: 500px;
             width: 100%;
             text-align: center;
+            animation: fadeIn 2s ease-in-out;
         }
         h1 {
             color: #333;
             margin-bottom: 20px;
+            font-size: 2rem;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
         }
         form {
             display: flex;
@@ -37,36 +41,52 @@
         }
         input[type="file"] {
             margin-bottom: 20px;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+            padding: 12px;
+            border: 2px solid #007bff;
+            border-radius: 8px;
             font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+        input[type="file"]:focus {
+            border-color: #0056b3;
+            outline: none;
         }
         button {
-            background-color: #007bff;
+            background-color: #28a745;
             color: white;
             border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
+            padding: 12px 25px;
+            border-radius: 8px;
             font-size: 16px;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: background-color 0.3s, transform 0.2s;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
         button:hover {
-            background-color: #0056b3;
+            background-color: #218838;
+            transform: scale(1.05);
         }
-
+        button:active {
+            background-color: #1e7e34;
+        }
+        .error-message {
+            color: #dc3545;
+            font-size: 16px;
+            margin-top: 10px;
+        }
         .container2 {
             text-align: center;
+            margin-bottom: 20px;
         }
         h2 {
-            font-size: 24px;
+            font-size: 2.5rem;
             color: #333;
             padding: 20px;
-            border-right: 2px solid #333;
+            border-right: 3px solid #007bff;
             white-space: nowrap;
             overflow: hidden;
-            animation: typing 4s steps(40, end), blink-caret .75s step-end infinite;
+            animation: typing 4s steps(40, end), blink-caret 0.75s step-end infinite;
+            margin: 0;
         }
         @keyframes typing {
             from { width: 0; }
@@ -74,20 +94,23 @@
         }
         @keyframes blink-caret {
             from, to { border-color: transparent; }
-            50% { border-color: #333; }
+            50% { border-color: #007bff; }
         }
     </style>
 </head>
 <body>
     <div class="container2">
-        <h2>Verify your medicine <br> to ensure safety <br> and trusted products <br>to your customer</h2>
+        <h2>Verify Your Medicine <br> to Ensure Safety <br> and Trusted Products <br> for Your Customers</h2>
     </div>
     <div class="container">
         <h1>Upload Barcode Image</h1>
         <form action="https://siva.viyugha.tech/upload" method="post" enctype="multipart/form-data">
-            <input type="file" name="file" accept="image/*" capture="camera" />
+            <input type="file" name="file" accept="image/*" capture="camera" required />
             <button type="submit">Upload</button>
         </form>
+        <p class="error-message">{{ res }}</p>
     </div>
+    <a onclick="window.history.back()" style="cursor: pointer;padding: 30px;">Back</a>
+    <a href="http://127.0.0.1:5000/homepage" style="cursor: pointer;padding: 30px;">Home</a>
 </body>
 </html>
