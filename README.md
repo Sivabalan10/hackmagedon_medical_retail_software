@@ -48,13 +48,6 @@ This project is a comprehensive application tailored for medical retailers in Ta
    git clone https://github.com/Sivabalan10/hackmagedon_medical_retail_software.git
    cd hackmagedon_medical_retail_software
 
-markdown
-Copy code
-# Project Title
-
-## Overview
-This project is a multi-component application designed to provide various services, including a smart dashboard, barcode scanning, and more.
-
 ## Prerequisites
 Make sure you have all necessary dependencies installed. You can install them by running:
 
