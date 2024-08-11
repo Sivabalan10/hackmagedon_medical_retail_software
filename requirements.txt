@@ -1,0 +1,11 @@
+Flask==2.3.3
+webview==0.5.34
+sqlite3  
+datetime 
+random  
+string  
+twilio==7.18.0
+opencv-python-headless==4.8.0.74
+numpy==1.25.1
+pyzbar==0.1.9
+pandas==2.0.3
