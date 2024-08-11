@@ -47,3 +47,50 @@ This project is a comprehensive application tailored for medical retailers in Ta
    ```bash
    git clone https://github.com/Sivabalan10/hackmagedon_medical_retail_software.git
    cd hackmagedon_medical_retail_software
+
+markdown
+Copy code
+# Project Title
+
+## Overview
+This project is a multi-component application designed to provide various services, including a smart dashboard, barcode scanning, and more.
+
+## Prerequisites
+Make sure you have all necessary dependencies installed. You can install them by running:
+
+
+pip install -r requirements.txt
+How to Run the Application
+Follow these steps to run the entire application:
+
+markdown
+Copy code
+# Step 1: Run the Main Application
+- Navigate to the main directory.
+- Execute the `app.py` file.
+
+python app.py
+# Step 2: Start the Dashboard Server
+- Change directory to dashboard.
+- Execute the dashboard_server.py file.
+
+- cd dashboard
+- python dashboard_server.py
+# Step 3: Return to the Main Directory
+- Navigate back to the main directory.
+
+- cd ..
+# Step 4: Start the Barcode Server
+- Change directory to barcode.
+- Execute the barcode_server.py file.
+
+- cd barcode
+- python barcode_server.py
+# Step 5: Return to the Main Directory
+Navigate back to the main directory.
+
+- cd ..
+# Step 6: Run the Smart Dashboard
+- Execute the smart_dashboard.py file.
+
+- python smart_dashboard.py
